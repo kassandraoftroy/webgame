@@ -24,7 +24,7 @@ with open(os.path.join(os.path.dirname(__file__), 'init.txt')) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['kassandrastable.herokuapp.com', '*']
 
