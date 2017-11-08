@@ -26,7 +26,7 @@ with open(os.path.join(os.path.dirname(__file__), 'init.txt')) as f:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['kassandrastable.herokuapp.com', '*']
 
 
 # Application definition
