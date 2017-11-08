@@ -1,0 +1,76 @@
+<body style="background-image:url('http://bgfons.com/uploads/clouds/clouds_texture2851.jpg');font-family:serif;text-align:left;">
+<button style="padding:0;border-style:solid;border-color:black;background-color:rgba(0,0,0,0);color:black;text-align:center;font-family:serif;font-size:42px;height:60px;width:380px;"><strong>Kassandra's Table</strong></button>
+<span style='font-size:20px;'>&emsp;&emsp;&emsp;&emsp;Playing hand {{hand_num}}...</span>
+<p style='text-align:right;'>
+	<a href="{% url 'login' %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">L O G I N</button></a>
+	&emsp;&emsp;
+	<a href="{% url 'stats' user.id  %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">S T A T S</button></a>
+</p>
+
+<table style='font-family:serif;text-align:left;width:100%' align='center'>
+	<tr> 
+		<td>
+			<h2 style='font-family:serif;text-align:center;'>{{user.name}}: {{stack}} </h2>
+		</td>
+		<td><p style="text-align:left">&emsp;<button style="padding:0;border:none;background-color:rgba(0,0,0,0);text-align:center;height:120px;width:200px;">
+			<img src={{hand.0}} style="width:90px;height:126px">&emsp;<img src={{hand.1}} style="width:90px;height:126px">
+		</button></p></td>
+		<td> 
+			<ul style='list-style-type:none;font-size:17px;'>
+			<br><br>
+				{% for b in messages %}
+					<li> 
+						<strong>{{b}}<strong> 
+						<br> 
+					</li>
+				{% endfor %}
+			 </ul>
+		</td>
+
+	</tr>
+	<tr>
+		<td>&emsp;</td><td>&emsp;</td><td>&emsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<h1 style='font-family:serif;text-align:center;'>POT: {{pot}}</h1>
+		</td>
+		<td>
+			<p style='text-align:left'><button style="padding:0;border-style:solid;border-color:black;background-color:rgba(0,0,0,0);text-align:left;height:140px;width:500px;border-radius:20px">&emsp;
+			{% for b in board %}
+				<img src={{b}} style="width:90px;height:126px">
+			{% endfor %}
+			</button> </p>
+		</td>
+		<td>
+			<p style='text-align:center'>
+				<span style='font-size:28px'><strong>TO CALL:&nbsp;&nbsp;<span style='color:red;text-decoration:underline;'>{{to_call}}</strong></span></span><br>
+				<a href="{% url 'play' alias.id call next %}"><button style='width:100px'>{{call_button}}</button></a>
+				<a href="{% url 'play' alias.id fold next %}"><button style='width:100px'><span style='color:{{f_button}}'>fold</span></button></a>
+				<br>
+				<a href="{% url 'play' alias.id raise.0 next %}"><button>raise 20</button></a>
+				<a href="{% url 'play' alias.id raise.1 next %}"><button>raise 30</button></a>
+				<a href="{% url 'play' alias.id raise.2 next %}"><button>raise 40</button></a>
+				<a href="{% url 'play' alias.id raise.3 next %}"><button><span style='color:{{r_button}}'>raise x2</span></button></a><br>
+				<a href="{% url 'play' alias.id raise.4 next %}"><button><span style='color:{{p_button}}'>raise 1/2 pot</span></button></a>
+				<a href="{% url 'play' alias.id raise.5 next %}"><button>raise POT</button></a>
+				<a href="{% url 'play' alias.id raise.6 next %}"><button>ALL IN</button></a>
+			</p>
+		</td>	
+	</tr>
+	<tr>
+		<td>&emsp;</td><td>&emsp;</td><td>&emsp;</td>
+	</tr>
+	<tr>
+		<td>
+			<h2 style='text-align:center;'>Kassandra: {{ai_stack}} </h2>
+		</td>
+		<td><p style="text-align:left">&emsp;<button style="padding:0;border:none;background-color:rgba(0,0,0,0);text-align:center;height:120px;width:200px;">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Bicyclebackside.jpg" style="width:90px;height:126px">&emsp;<img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Bicyclebackside.jpg" style="width:90px;height:126px">
+		</button></p></td>
+		<td>
+			&emsp;
+		</td>
+	</tr>
+
+</body>

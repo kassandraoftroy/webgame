@@ -1,0 +1,11 @@
+<body style="background-image:url('http://bgfons.com/uploads/clouds/clouds_texture2851.jpg');font-family:serif;text-align:left;">
+<button style="padding:0;border-style:solid;border-color:black;background-color:rgba(0,0,0,0);color:black;text-align:center;font-family:serif;font-size:42px;height:60px;width:380px;"><strong>Kassandra's Table</strong></button>
+
+<p style='text-align:right;'>
+	<a href="{% url 'login' %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">L O G I N</button></a>
+	&emsp;&emsp;
+	<a href="{% url 'stats' user.id %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">S T A T S</button></a>
+</p>
+<br><br><br><br><br><br>
+<p style="text-align:center;">
+<a href="{% url 'play_again' user.id %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:40px;height:60px;width:380px;">P L A Y&emsp;P O K E R</button></a></p>

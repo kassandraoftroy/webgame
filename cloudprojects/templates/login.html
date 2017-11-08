@@ -1,0 +1,42 @@
+<body style="background-image:url('http://bgfons.com/uploads/clouds/clouds_texture2851.jpg');font-family:serif;text-align:left;">
+
+<a href="{% url 'start_game' %}"><button style="padding:0;border-style:solid;border-color:black;background-color:rgba(0,0,0,0);color:black;text-align:center;font-family:serif;font-size:42px;height:60px;width:380px;"><strong>Kassandra's Table</strong></button></span></a>
+
+<p style ='text-align:right;'>
+	<a href="{% url 'start_game' %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">P L A Y</button></a>
+
+
+<p style="text-align:center;">{{msg}}</p>
+
+<br><br>
+
+<table style='font-family:serif;text-align:left;width:80%' align='center'>
+	<tr>
+		<th>&emsp;&emsp;&emsp;</th>
+		<th><h2>&emsp;&emsp;&emsp;Create User</h2></th>
+		<th>&emsp;</th>
+		<th><h2>&emsp;&emsp;&emsp;Sign in</h2></th>
+	</tr>
+
+	<tr>
+		<td>&emsp;&emsp;&emsp;</td>
+		<td>
+			<form action="{% url 'new_login' %}" method="post">
+				{% csrf_token %}
+				<span style='font-size:20px'><p><strong>Username:&emsp;</strong><input type="text" name="new_name" size="20" style='font-size:13px;height:25px;background-color:rgba(0,0,0,0);padding:0;border-color:white;border-style:solid;text-align:center;color:white;outline:none;font-family:courier;'></p>
+				<p><strong>Password: &emsp;</strong><input type="text" name="new_pass" size="20" style='font-size:13px;height:25px;background-color:rgba(0,0,0,0);padding:0;border-color:white;border-style:solid;text-align:center;color:white;outline:none;font-family:courier;'><span style="font-size:14px;"><strong> (optional)</strong></span></p>&emsp;&emsp;&emsp;
+				<button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:18px;height:30px;width:150px;" type="submit">C R E A T E</button></span></span>
+			</form>
+		</td>
+		<td>&emsp;</td>
+		<td>
+			<form action="{% url 'user_login' %}" method="post">
+				{% csrf_token %}
+				<span style='font-size:20px'><p><strong>Username:&emsp;</strong><input type="text" name="user_name" size="20" style='font-size:13px;height:25px;background-color:rgba(0,0,0,0);padding:0;border-color:white;border-style:solid;text-align:center;color:white;outline:none;font-family:courier;'></p>
+				<p><strong>Password: &emsp;</strong><input type="text" name="user_pass" size="20" style='font-size:13px;height:25px;background-color:rgba(0,0,0,0);padding:0;border-color:white;border-style:solid;text-align:center;color:white;outline:none;font-family:courier;'></p>&emsp;&emsp;&emsp;
+				<button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:18px;height:30px;width:150px;" type="submit">S I G N&emsp;I N</button></span>
+			</form>	
+		</td>
+	</tr>
+
+</table>

@@ -1,0 +1,50 @@
+<body style="background-image:url('http://bgfons.com/uploads/clouds/clouds_texture2851.jpg');font-family:serif;text-align:left;">
+
+<a href="{% url 'play_again' user.id %}"><button style="padding:0;border-style:solid;border-color:black;background-color:rgba(0,0,0,0);color:black;text-align:center;font-family:serif;font-size:42px;height:60px;width:380px;"><strong>Kassandra's Table</strong></button></span></a>
+
+<p style='text-align:right;'>
+	<a href="{% url 'login' %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">L O G I N</button></a>
+	&emsp;&emsp;
+	<a href="{% url 'play_again' user.id %}"><button style="padding:0;border-style:solid;border-color:white;background-color:rgba(0,0,0,0);color:white;font-family:impact;text-align:center;font-size:22px;height:34px;width:125px;">P L A Y</button></a>
+</p>
+<br><br>
+
+<table style='font-family:serif;text-align:left;width:80%' align='center'>
+	<tr>
+		<th><h2>&emsp;&emsp;&emsp;{{user.name}} STATS&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</h2></th>
+		<th><h2>&emsp;&emsp;&emsp;Kassandra STATS</h2></th>
+	</tr>
+	<tr>
+		<td>
+			<span style='font-size:20px'><p><strong>Games Played: {{games_hands.0}}&emsp; Hands Played: {{games_hands.1}}</strong></p>
+			<p><strong>&emsp;&emsp;&emsp;&emsp;&emsp;ROI:</strong><span style='color:{{u_color}};font-family:impact;'> {{user.roi}}</span></strong></p>
+			<p><strong>&emsp;&emsp;Class Rank: {{level}} , {{user_index}}</strong></p></span>
+
+		</td>
+		<td>
+			<span style='font-size:20px'><p><strong>Games Played: {{total_games}}&emsp; Hands Played: {{total_hands}}</strong></p>
+			<p><strong>&emsp;&emsp;&emsp;&emsp;&emsp;ROI: <span style='color:{{k_color}};font-family:impact;'>{{K_ROI}}</span></strong></p>
+			<p>&emsp;</p>
+		</td>
+	</tr>
+
+</table>
+<br><br><br><br>
+<table style='font-family:serif;text-align:left;width:80%' align='center'>
+	<tr>
+		<th style='text-align:center;'><h3>&emsp;GOLD leaderboard&emsp;</h3></th>
+		<th style='text-align:center;'><h3>&emsp;SILVER leaderboard&emsp;</h3></th>
+		<th style='text-align:center;'><h3>&emsp;BRONZE leaderboard&emsp;</h3></th>
+	</tr>
+	<tr>
+		<td style='text-align:center;'>
+			{% for g in gold %}<p><strong>{{g.0}}</strong>&emsp;&emsp;&emsp;<span style='font-size:20px;font-family:impact;color:{{g.2}}'>{{g.1}}</span></p>{% endfor %}
+		</td>
+		<td style='text-align:center;'>
+			{% for s in silver %}<p><strong>{{s.0}}</strong>&emsp;&emsp;&emsp;<span style='font-family:impact;font-size:20px;color:{{s.2}}'>{{s.1}}</span></p>{% endfor %}
+		</td>
+		<td style='text-align:center;'>
+			{% for b in bronze %}<p><strong>{{b.0}}</strong>&emsp;&emsp;&emsp;<span style='font-size:20px;font-family:impact;color:{{b.2}}'>{{b.1}}</span></p>{% endfor %}
+		</td>
+	</tr>
+</table>
