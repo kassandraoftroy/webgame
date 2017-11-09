@@ -87,12 +87,12 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 					return min(stack, to_call+pot)
 				else:
 					return to_call
-			elif to_call<stack/3.0:
+			elif to_call<stack/4.0:
 				if V_strength < 3:
-					if random.random()>.66:
+					if random.random()>.75:
 						return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
 				elif V_strength < 5:
-					if random.random()>.85:
+					if random.random()>.9:
 						return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
 				return int(0)
 			return int(0)
@@ -128,7 +128,7 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 				else:
 					return to_call
 			if to_call < stack/4.0 and to_call < opp_stack/4.0 and strong_bets < 3:
-				if random.random() > .15:
+				if random.random() < .15:
 					return min(stack, to_call*2+pot)
 			return int(0)
 		elif to_call == 0:
