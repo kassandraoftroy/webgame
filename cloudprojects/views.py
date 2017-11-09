@@ -294,7 +294,7 @@ def stats(request, user_id):
 				above_200.append((u.name, u.roi, "green"))
 			else:
 				above_200.append((u.name, u.roi, "red"))
-	Kassandra_ROI = 0 - round(rois/float(users), 3)
+	Kassandra_ROI = 0 - round(float(rois)/float(users), 3)
 	if Kassandra_ROI > 0:
 		k_color = "green"
 	else:
