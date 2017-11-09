@@ -157,7 +157,7 @@ def play(request, n, bet, turn):
 				winner = "%s WINS" %name, GAME.pot
 		elif state[7]==2:
 			if state[-3] == True:
-				winner = "KASSANDRA WINS with a", evaluator.class_to_string(evaluator.get_rank_class(evaluator._seven(state[1]+list(games[player.id].p2_hand))))
+				winner = "KASSANDRA WINS with a", evaluator.class_to_string(evaluator.get_rank_class(evaluator._seven(state[1]+list(GAME.p2_hand))))
 			else:
 				winner = "KASSANDRA WINS", GAME.pot
 		elif state[7]==0:
