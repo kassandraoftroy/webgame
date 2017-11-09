@@ -271,10 +271,12 @@ def stats(request, user_id):
 	total_hands = 0
 	total_games = 0
 	rois = 0
+	users = 0
 	for u in User.objects.all():
 		x = u.hands_and_games()
 		if x[1] > 0:
 			rois += u.roi
+			users += 1
 		total_hands += x[1]
 		total_games += x[0]
 		if x[0] > 20 or x[1] > 200:
@@ -292,7 +294,7 @@ def stats(request, user_id):
 				above_200.append((u.name, u.roi, "green"))
 			else:
 				above_200.append((u.name, u.roi, "red"))
-	Kassandra_ROI = 0 - round(sum(rois)/len(rois), 3)
+	Kassandra_ROI = 0 - round(rois/float(users), 3)
 	if Kassandra_ROI > 0:
 		k_color = "green"
 	else:
