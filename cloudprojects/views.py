@@ -268,16 +268,13 @@ def stats(request, user_id):
 	above_1000 = []
 	above_2500 = []
 	my_hands = sum([p.hands for p in Player.objects.all() if p.user==this_user])
-	rois = [user.roi for user in User.objects.all() if user.hands_and_games()[1]>0]
-	Kassandra_ROI = 0 - round(sum(rois)/len(rois), 3)
-	if Kassandra_ROI > 0:
-		k_color = "green"
-	else:
-		k_color = "red"
 	total_hands = 0
 	total_games = 0
+	rois = 0
 	for u in User.objects.all():
 		x = u.hands_and_games()
+		if x[1] > 0:
+			rois += u.roi
 		total_hands += x[1]
 		total_games += x[0]
 		if x[0] > 20 or x[1] > 200:
@@ -295,6 +292,11 @@ def stats(request, user_id):
 				above_200.append((u.name, u.roi, "green"))
 			else:
 				above_200.append((u.name, u.roi, "red"))
+	Kassandra_ROI = 0 - round(sum(rois)/len(rois), 3)
+	if Kassandra_ROI > 0:
+		k_color = "green"
+	else:
+		k_color = "red"
 	gold = sorted(above_2500, key=itemgetter(1), reverse=True)
 	silver = sorted(above_1000, key=itemgetter(1), reverse=True)
 	bronze = sorted(above_200, key=itemgetter(1), reverse=True)
@@ -317,9 +319,12 @@ def stats(request, user_id):
 		user_index = gold.index((this_user.name, this_user.roi)) + 1
 	if this_user.roi > 0:
 		u_color = "green"
+		opposite = "red"
 	else:
 		u_color = "red"
-	context = {"level":level, "user_index":user_index, "gold":gold, "silver":silver, "bronze":bronze, "K_ROI":Kassandra_ROI, "user":this_user, "games_hands":this_user.hands_and_games(), "total_hands":total_hands, "total_games":total_games, "u_color":u_color, "k_color":k_color}
+		opposite = "green"
+	opposite_roi = -1*this_user.roi
+	context = {"level":level, "user_index":user_index, "gold":gold, "silver":silver, "bronze":bronze, "K_ROI":Kassandra_ROI, "user":this_user, "opp_color":opposite, "opp_roi":opposite_roi, "games_hands":this_user.hands_and_games(), "total_hands":total_hands, "total_games":total_games, "u_color":u_color, "k_color":k_color}
 	return render(request, "stats.html", context)
 		
 
