@@ -241,7 +241,7 @@ class Game:
 		else:
 			dealer = False
 
-		bet = int(self.p2_decision(self.p2_hand, self.board, self.p2_stack, self.blinds[1], self.to_call, self.pot, dealer, self.p2_opp_bet_log, ""))
+		bet = int(self.p2_decision(self.p2_hand, self.board, self.p2_stack, self.p1_stack, self.blinds[1], self.to_call, self.pot, dealer, self.p2_opp_bet_log, ""))
 		if bet > self.p1_stack + self.to_call:   ### adjust bet size if it puts other opp all in
 			bet = self.p1_stack + self.to_call
 

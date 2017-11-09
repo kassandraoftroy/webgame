@@ -21,10 +21,10 @@ evaluator = Evaluator()
 all_holes = list(combinations(Deck().draw(52), 2))
 all_holes = [frozenset(i) for i in all_holes]
 
-def AI(hand, board, stack, BB, to_call, pot, dealer, bets, VARIABLES):
+def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES):
 	
 	if len(board) == 0:
-		return preflop_decision(hand, board, stack, BB, to_call, pot, dealer, bets)
+		return preflop_decision(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets)
 	
 	if len(board) == 3:
 		name = "".join(sorted([Card.int_to_str(c) for c in board], key=str.lower))
@@ -64,7 +64,10 @@ def AI(hand, board, stack, BB, to_call, pot, dealer, bets, VARIABLES):
 	if to_call > 25*BB:
 		V_strength += 2
 
-	if to_call == (2000-stack):
+	if to_call >= opp_stack/2.0:
+		V_strength += 1
+
+	if to_call == opp_stack:
 		if len(board)<=3 or pot/1.4 < to_call:
 			V_strength += 2
 		else:
@@ -110,6 +113,7 @@ def AI(hand, board, stack, BB, to_call, pot, dealer, bets, VARIABLES):
 				elif V_strength < 4 and random.random() > .75:
 					return min(max(pot/2.0, BB*3), stack)
 			return int(0)
+
 	else:
 		if my_hand_percentile**V_strength > .95:
 			return stack
@@ -120,19 +124,27 @@ def AI(hand, board, stack, BB, to_call, pot, dealer, bets, VARIABLES):
 				if EV_CALL > pot/1.2:
 					return min(stack, pot*2+to_call)
 				if EV_CALL > pot/2.0:
-					return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
+					return min(stack, to_call+pot)
 				else:
 					return to_call
-			if to_call < stack/4.0 and to_call < (2000-stack)/4.0 and strong_bets < 3:
+			if to_call < stack/4.0 and to_call < opp_stack/4.0 and strong_bets < 3:
 				if random.random() > .15:
-					return min(stack, to_call*3)
+					return min(stack, to_call*2+pot)
 			return int(0)
 		elif to_call == 0:
 			if dealer == True:
-				if my_hand_percentile**V_strength > .65:
-					return min(max(pot/2.0, 6*BB), stack/4.0)
+				if my_hand_percentile**V_strength > .85:
+					return min(stack, pot*2)
+				elif my_hand_percentile**V_strength > .75:
+					return min(stack/2.0, pot)
+				elif my_hand_percentile**V_strength > .6:
+					return min(max(pot/2.0, 6*BB), stack/3.0)
 			else:
-				if my_hand_percentile**V_strength > .8:
+				if my_hand_percentile**V_strength > .9:
+					return min(stack, pot*2)
+				elif my_hand_percentile > .8:
+					return min(stack/3.0, pot)
+				elif my_hand_percentile**V_strength > .7:
 					return min(max(pot/2.0, 6*BB), stack/4.0)
 			return int(0)
 
@@ -146,7 +158,7 @@ def AI(hand, board, stack, BB, to_call, pot, dealer, bets, VARIABLES):
 
 
 
-def preflop_decision(hand, board, stack, BB, to_call, pot, dealer, bets, VARS=[.35, .5, .25, .1]):
+def preflop_decision(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARS=[.35, .5, .25, .1]):
 
 	STAT_VARS = VARS
 	rank = pocket_class[frozenset(hand)]
