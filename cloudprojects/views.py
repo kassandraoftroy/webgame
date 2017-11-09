@@ -8,12 +8,11 @@ from Card_Lookup import card_images, convert
 from deuces import Evaluator 
 from models import Player, User
 import random
-import zipfile
+import pickle
 from operator import itemgetter
 import os
 
 evaluator = Evaluator()
-games = {}
 
 
 def home(request):
@@ -33,8 +32,10 @@ def start_game(request):
 	new_id.user = new_user
 	new_id.save()
 	next_turn = 1
-	games[new_id.id] = Game(new_user.name)
-	state = games[new_id.id].update_game(None)
+	GAME = Game(new_user.name)
+	state, variables = GAME.update_game(None)
+	with open(os.path.join(os.path.dirname(__file__), "game_%s.p" %new_id.id), "wb") as f:
+		pickle.dump(variables, f)
 	hand = [card_images[c] for c in state[0]]
 	board = [card_images[c] for c in state[1]]
 	raises = [2,3,4,5,6,7,8]
@@ -59,39 +60,45 @@ def start_game(request):
 def play(request, n, bet, turn):
 	player = Player.objects.get(id=n) 
 	name = player.user.name
+	with open(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id), "rb") as f:
+		a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q = pickle.load(f)
+	GAME = Game(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q)
 	if int(player.turns)+1 == int(turn):
 		player.turns += 1
 		player.save()
 		if int(bet) == 0:
-			state = games[player.id].update_game(0)
+			state, variables = GAME.update_game(0)
 		elif int(bet) == 1:
-			new_number = games[player.id].to_call
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call
+			state, variables = GAME.update_game(new_number)
 		elif int(bet) == 2:
-			new_number = games[player.id].to_call+20
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call+20
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==3:
-			new_number = games[player.id].to_call+30
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call+30
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==4:
-			new_number = games[player.id].to_call+40
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call+40
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==5:
-			new_number = games[player.id].to_call*2
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call*2
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==6:
-			new_number = games[player.id].to_call+games[player.id].pot*.5
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call+GAME.pot*.5
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==7:
-			new_number = games[player.id].to_call+games[player.id].pot
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.to_call+GAME.pot
+			state, variables = GAME.update_game(new_number)
 		elif int(bet)==8:
-			new_number = games[player.id].p1_stack
-			state = games[player.id].update_game(new_number)
+			new_number = GAME.p1_stack
+			state, variables = GAME.update_game(new_number)
 		elif int(bet) == 100:
-			state = games[player.id].update_game(None)
+			state, variables = GAME.update_game(None)
 	else:
-		state = games[player.id].STATE
+		state, variables = GAME.STATE
+
+	with open(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id), "wb") as f:
+		pickle.dump(variables, f)	
 
 	if len(state) == 2:
 		if state[0] == 100:
@@ -100,6 +107,7 @@ def play(request, n, bet, turn):
 			output = "%s LOST after %s hands" %(name, state[1])
 		else:
 			output = "After 100 hands %s averaged %s big blinds" %(name, state[0])
+		os.remove(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id))
 		context = {"msg":output, "user":player.user}
 		return render(request, "end_game.html", context)
 
@@ -135,7 +143,7 @@ def play(request, n, bet, turn):
 		next_turn = player.turns + 1
 		hand = [card_images[c] for c in state[0]]
 		board = [card_images[c] for c in state[1]]
-		cpu_hand = [card_images[c] for c in games[player.id].p2_hand]
+		cpu_hand = [card_images[c] for c in GAME.p2_hand]
 
 		try:
 			messages = [state[8][-2], state[8][-1]]
@@ -146,12 +154,12 @@ def play(request, n, bet, turn):
 			if state[-3] == True:
 				winner = "%s WINS with a" %name, evaluator.class_to_string(evaluator.get_rank_class(evaluator._seven(state[1]+list(state[0]))))
 			else:
-				winner = "%s WINS" %name, games[player.id].pot
+				winner = "%s WINS" %name, GAME.pot
 		elif state[7]==2:
 			if state[-3] == True:
 				winner = "KASSANDRA WINS with a", evaluator.class_to_string(evaluator.get_rank_class(evaluator._seven(state[1]+list(games[player.id].p2_hand))))
 			else:
-				winner = "KASSANDRA WINS", games[player.id].pot
+				winner = "KASSANDRA WINS", GAME.pot
 		elif state[7]==0:
 			winner = "tie hand with", evaluator.class_to_string(evaluator.get_rank_class(evaluator._seven(state[1]+list(state[0]))))
 		raises = [2,3,4,5,6]
@@ -165,7 +173,7 @@ def play(request, n, bet, turn):
 			fold_attr = 'black'
 		new_hand = 100
 		player.hands += 1
-		player.stack = int(games[player.id].p1_stack)
+		player.stack = int(GAME.p1_stack)
 		player.save()
 		U = player.user
 		U.roi = U.update_roi()
@@ -183,8 +191,10 @@ def play_again(request, user_id):
 	new_id.user = user
 	new_id.save()
 	next_turn = 1
-	games[new_id.id] = Game(user.name)
-	state = games[new_id.id].update_game(None)
+	GAME = Game(user.name)
+	state, variables = GAME.update_game(None)
+	with open(os.path.join(os.path.dirname(__file__), "game_%s.p" %new_id.id), "wb") as f:
+		pickle.dump(variables, f)
 	hand = [card_images[c] for c in state[0]]
 	board = [card_images[c] for c in state[1]]
 	raises = [2,3,4,5,6,7,8]

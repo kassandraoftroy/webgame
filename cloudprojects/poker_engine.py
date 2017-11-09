@@ -10,28 +10,34 @@ evaluator = Evaluator()
 
 class Game:
 
-	def __init__(self, p1_name, p2_decision=AI, max_hands=100):
+	def __init__(self, p1_name, p1_stack=1000, p2_stack=1000, p1_hand=[], p2_hand=[], pot=0, to_call=0, board=[], deck=Deck().draw(52), dealer=2, action=0, count=0, current_phase=0, MSGS=[], p1_opp_bet_log=[], p2_opp_bet_log=[], hand_number=0, max_hands=100, p2_decision=AI):
 
 		self.p1_name = p1_name
 
 		self.p2_decision = p2_decision
 
-		self.p1_stack = 1000
-		self.p2_stack = 1000
+		self.p1_stack = p1_stack
+		self.p2_stack = p2_stack
 		self.blinds = (5, 10)
-		self.hand_number = 0  ### random choice to start on hand 1 or hand 0 so that first player on button changes.
+		self.hand_number = hand_number ### random choice to start on hand 1 or hand 0 so that first player on button changes.
 		self.max_hands = max_hands
 
-		self.p1_pots_won = 0
-		self.p2_pots_won = 0
-		self.showdowns = 0
-		self.p1_showdowns_won = 0
-		self.p2_showdowns_won = 0
-
-		self.current_phase = 0
+		self.current_phase = current_phase
 		self.results = False
 		self.showdown_occured = False
-		self.MSGS = []
+		self.MSGS = MSGS
+		self.p1_opp_bet_log = p1_opp_bet_log
+		self.p2_opp_bet_log = p2_opp_bet_log
+		self.p1_hand = p1_hand
+		self.p2_hand = p2_hand
+		self.pot = pot
+		self.board = board
+		self.to_call = to_call
+		self.deck = deck
+		self.action = action
+		self.count = count
+		self.dealer = dealer
+
 
 	def update_game(self, new_input_value):
 		print "got here"
@@ -207,15 +213,12 @@ class Game:
 				return self.showdown()
 
 	def showdown(self):      ### deal next phase of game, then move on to betting. In final phase, evaluate showdown!
-		self.showdowns += 1
 		self.showdown_occured = True
 		p1_score = evaluator._seven(self.p1_hand+self.board)
 		p2_score = evaluator._seven(self.p2_hand+self.board)
 		if p1_score < p2_score:
-			self.p1_showdowns_won += 1
 			return self.hand_winner(1)
 		elif p1_score > p2_score:
-			self.p2_showdowns_won += 1
 			return self.hand_winner(2)
 		elif p1_score == p2_score:
 			return self.hand_winner(0)
@@ -227,7 +230,7 @@ class Game:
 		else:
 			dealer = False
 
-		self.STATE = (self.p1_hand, self.board, self.pot, self.to_call, self.p1_stack, self.MSGS, self.p2_stack, self.p2_opp_bet_log, dealer, self.blinds[1], self.hand_number, self.results)
+		self.STATE = ((self.p1_hand, self.board, self.pot, self.to_call, self.p1_stack, self.MSGS, self.p2_stack, self.p2_opp_bet_log, dealer, self.blinds[1], self.hand_number, self.results), (self.p1_name, self.p1_stack, self.p2_stack, self.p1_hand, self.p2_hand, self.pot, self.to_call, self.board, self.deck, self.dealer, self.action, self.count, self.current_phase, self.MSGS, self.p1_opp_bet_log, self.p2_opp_bet_log, self.hand_number))
 		return self.STATE
 
 	def bet_in(self):
@@ -299,17 +302,15 @@ class Game:
 		self.results = True
 		if num == 1:           
 			self.p1_stack = self.p1_stack + self.pot
-			self.p1_pots_won += 1
 		elif num == 2:
 			self.p2_stack = self.p2_stack + self.pot
-			self.p2_pots_won += 1
 		elif num == 0:
 			self.p1_stack = self.p1_stack + (self.pot/2.0)
 			self.p2_stack = self.p2_stack + (self.pot/2.0)
-		self.STATE = (self.p1_hand, self.board, self.pot, self.to_call, self.p1_stack, self.p2_hand, self.p2_stack, num, self.MSGS, self.showdown_occured, self.hand_number, self.results)
+		self.STATE = ((self.p1_hand, self.board, self.pot, self.to_call, self.p1_stack, self.p2_hand, self.p2_stack, num, self.MSGS, self.showdown_occured, self.hand_number, self.results), (self.p1_name, self.p1_stack, self.p2_stack, self.p1_hand, self.p2_hand, self.pot, self.to_call, self.board, self.deck, self.dealer, self.action, self.count, self.current_phase, self.MSGS, self.p1_opp_bet_log, self.p2_opp_bet_log, self.hand_number))
 		return self.STATE
 
 
 	def end(self):         #### end of game -- locate winner, output collected stats
 		self.output = [(self.p1_stack - 1000)/self.blinds[1], self.hand_number]
-		return self.output
+		return (self.output, True)
