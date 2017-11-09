@@ -264,7 +264,7 @@ def stats(request, user_id):
 	above_1000 = []
 	above_2500 = []
 	my_hands = sum([p.hands for p in Player.objects.all() if p.user==this_user])
-	rois = [user.roi for user in User.objects.all()]
+	rois = [user.roi for user in User.objects.all() if user.hands_and_games()[1]>0]
 	Kassandra_ROI = 0 - round(sum(rois)/len(rois), 3)
 	if Kassandra_ROI > 0:
 		k_color = "green"
