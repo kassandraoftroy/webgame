@@ -95,7 +95,11 @@ def play(request, n, bet, turn):
 		elif int(bet) == 100:
 			state, variables = GAME.update_game(None)
 	else:
-		state, variables = GAME.STATE
+		if GAME.dealer == 1:
+			db = True
+		else:
+			db = False
+		state, variables = ((GAME.p1_hand, GAME.board, GAME.pot, GAME.to_call, GAME.p1_stack, GAME.MSGS, GAME.p2_stack, GAME.p2_opp_bet_log, db, GAME.blinds[1], GAME.hand_number, GAME.results), (GAME.p1_name, GAME.p1_stack, GAME.p2_stack, GAME.p1_hand, GAME.p2_hand, GAME.pot, GAME.to_call, GAME.board, GAME.deck, GAME.dealer, GAME.action, GAME.count, GAME.current_phase, GAME.MSGS, GAME.p1_opp_bet_log, GAME.p2_opp_bet_log, GAME.hand_number))
 
 	with open(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id), "wb") as f:
 		pickle.dump(variables, f)	
