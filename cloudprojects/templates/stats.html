@@ -16,15 +16,15 @@
 	</tr>
 	<tr>
 		<td>
-			<span style='font-size:20px'><p><strong>Games Played: {{games_hands.0}}&emsp; Hands Played: {{games_hands.1}}</strong></p>
-			<p><strong>&emsp;&emsp;&emsp;&emsp;&emsp;ROI:</strong><span style='color:{{u_color}};font-family:impact;'> {{user.roi}}</span></strong></p>
-			<p><strong>&emsp;&emsp;Class Rank: {{level}} , {{user_index}}</strong></p></span>
+			<span style='font-size:20px'><p><strong>ROI:</strong><span style='color:{{u_color}};font-family:impact;'> {{user.roi}} </span><strong>in {{games_hands.0}} Sessions </strong>&nbsp;&nbsp;({{games_hands.1}} hands)</p>
+			<p><strong>&emsp;&emsp;Class Rank: {{level}},&nbsp;&nbsp;{{user_index}}</strong></p></span>
+			<p>&emsp;</p>
 
 		</td>
 		<td>
-			<span style='font-size:20px'><p><strong>Total Games: {{total_games}}&emsp; Total Hands: {{total_hands}}</strong></p>
-			<p><strong>&emsp;&emsp;&emsp;&emsp;Lifetime ROI: <span style='color:{{k_color}};font-family:impact;'>{{K_ROI}}</span></strong></p>
-			<p>VS {{user.name}}:&emsp;<span style='color:{{opp_color}};font-family:impact;'>{{opp_roi}}</span>ROI from {{games_hands.0}} Games Played</p>
+			<span style='font-size:20px'><p>(vs {{user.name}})&nbsp;&nbsp;<strong>ROI:</strong><span style='color:{{opp_color}};font-family:impact;'> {{opp_roi}} </span>in {{games_hands.0}} Sessions</p>
+			<p>(Lifetime)&nbsp;&nbsp;<strong>ROI:</strong><span style='color:{{k_color}};font-family:impact;'> {{K_ROI}} </span><strong>in {{total_games}} Sessions</strong></p>
+			<p><strong>Total Hands Played: {{total_hands}}</strong></p></span>
 		</td>
 	</tr>
 
