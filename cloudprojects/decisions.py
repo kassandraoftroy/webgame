@@ -82,18 +82,18 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 					if random.random() > .5:
 						return to_call
 					else:
-						return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
+						return min(stack, random.choice([to_call+pot, to_call*2+pot]))
 				elif pot/2.0 >= EV_CALL > pot/3.5:
 					return min(stack, to_call+pot)
 				else:
 					return to_call
 			elif to_call<stack/4.0:
 				if V_strength < 3:
-					if random.random()>.75:
-						return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
+					if random.random()>.85:
+						return min(stack, random.choice([to_call+pot, to_call+pot, to_call*2+pot]))
 				elif V_strength < 5:
-					if random.random()>.9:
-						return min(stack, random.choice([to_call+pot/2.0, to_call+pot]))
+					if random.random()>.95:
+						return min(stack, random.choice([to_call+pot]))
 				return int(0)
 			return int(0)
 
@@ -102,21 +102,21 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 				if my_hand_percentile**V_strength > .8 and len(board) == 3:
 					return int(0)
 				if my_hand_percentile**V_strength > .66:
-					return min(max(pot/2.0, BB*3), stack)
-				elif V_strength < 4 and random.random() > .5:
-					return min(max(pot/2.0, BB*3), stack)
+					return min(pot, stack)
+				elif V_strength < 4 and random.random() > .75:
+					return min(pot, stack)
 			else:
-				if my_hand_percentile**V_strength > .8:
+				if my_hand_percentile**V_strength > .85:
 					return int(0)
 				elif my_hand_percentile**V_strength > .66:
-					return min(max(pot/2.0, BB*3), stack)
-				elif V_strength < 4 and random.random() > .75:
-					return min(max(pot/2.0, BB*3), stack)
+					return min(pot, stack)
+				elif V_strength < 4 and random.random() > .85:
+					return min(pot, stack)
 			return int(0)
 
 	else:
 		if my_hand_percentile**V_strength > .95:
-			return stack
+			return min(stack, pot*2+to_call)
 
 		if to_call > 0:
 			EV_CALL = (my_hand_percentile**V_strength)*pot - (1-my_hand_percentile**V_strength)*to_call
@@ -128,7 +128,7 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 				else:
 					return to_call
 			if to_call < stack/4.0 and to_call < opp_stack/4.0 and strong_bets < 3:
-				if random.random() < .15:
+				if random.random() < .1:
 					return min(stack, to_call*2+pot)
 			return int(0)
 		elif to_call == 0:
