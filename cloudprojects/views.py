@@ -277,23 +277,26 @@ def stats(request, user_id):
 		if x[1] > 0:
 			rois += u.roi
 			users += 1
-		total_hands += x[1]
-		total_games += x[0]
-		if x[0] > 20 or x[1] > 200:
-			if u.roi > 0:
-				above_200.append((u.name, u.roi, "green"))
-			else:
-				above_200.append((u.name, u.roi, "red"))
-		if x[0] > 100 or x[1] > 1000:
-			if u.roi > 0:
-				above_200.append((u.name, u.roi, "green"))
-			else:
-				above_200.append((u.name, u.roi, "red"))
-		if x[0] > 200 or x[1] > 2500:
-			if u.roi > 0:
-				above_200.append((u.name, u.roi, "green"))
-			else:
-				above_200.append((u.name, u.roi, "red"))
+			total_hands += x[1]
+			total_games += x[0]
+			if x[0] > 20 or x[1] > 200:
+				if u.roi > 0:
+					above_200.append((u.name, u.roi, "green"))
+				else:
+					above_200.append((u.name, u.roi, "red"))
+			if x[0] > 100 or x[1] > 1000:
+				if u.roi > 0:
+					above_200.append((u.name, u.roi, "green"))
+				else:
+					above_200.append((u.name, u.roi, "red"))
+			if x[0] > 200 or x[1] > 2500:
+				if u.roi > 0:
+					above_200.append((u.name, u.roi, "green"))
+				else:
+					above_200.append((u.name, u.roi, "red"))
+		else:
+			if u.name.split()[0] == "Player":
+				u.delete()
 	Kassandra_ROI = 0 - round(float(rois)/float(users), 3)
 	if Kassandra_ROI > 0:
 		k_color = "green"
