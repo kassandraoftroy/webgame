@@ -267,14 +267,13 @@ def stats(request, user_id):
 	above_200 = []
 	above_1000 = []
 	above_2500 = []
-	my_hands = sum([p.hands for p in Player.objects.all() if p.user==this_user])
 	total_hands = 0
 	total_games = 0
 	rois = 0
 	users = 0
 	for u in User.objects.all():
 		x = u.hands_and_games()
-		if x[1] > 0:
+		if x[1] > 0 and x[2] > 0:
 			rois += u.roi
 			users += 1
 			total_hands += x[1]
@@ -295,7 +294,7 @@ def stats(request, user_id):
 				else:
 					above_200.append((u.name, u.roi, "red"))
 		else:
-			if u.name.split()[0] == "Player":
+			if u.name.split()[0] == "Player" and u != this_user:
 				u.delete()
 	Kassandra_ROI = 0 - round(float(rois)/float(users), 3)
 	if Kassandra_ROI > 0:

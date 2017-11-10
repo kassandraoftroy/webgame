@@ -8,8 +8,9 @@ class User(models.Model):
 	name=models.CharField(max_length=200)
 	password=models.CharField(max_length=200)
 	roi=models.DecimalField(max_digits=10, decimal_places=3, default="")
+	
 	def update_roi(self):
-		my_games = [p for p in Player.objects.all() if p.user.name==self.name and p.hands != 0]
+		my_games = [p for p in Player.objects.filter(user=self) if p.hands != 0]
 		if len(my_games) > 0:
 			stack_agg = 0 
 			for i in my_games:
@@ -20,7 +21,7 @@ class User(models.Model):
 			return int(0)
 
 	def hands_and_games(self):
-		my_games = [p for p in Player.objects.all() if p.user.name==self.name and p.hands != 0]
+		my_games = [p for p in Player.objects.filter(user=self) if p.hands != 0]
 		my_hands = 0
 		for i in my_games:
 			my_hands += i.hands
