@@ -138,14 +138,14 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 				elif my_hand_percentile**V_strength > .75:
 					return min(stack/2.0, pot)
 				elif my_hand_percentile**V_strength > .6:
-					return min(max(pot/2.0, 6*BB), stack/3.0)
+					return min(pot, stack/3.0)
 			else:
 				if my_hand_percentile**V_strength > .9:
 					return min(stack, pot*2)
 				elif my_hand_percentile > .8:
 					return min(stack/3.0, pot)
 				elif my_hand_percentile**V_strength > .7:
-					return min(max(pot/2.0, 6*BB), stack/4.0)
+					return min(pot, stack/4.0)
 			return int(0)
 
 		return int(0)
