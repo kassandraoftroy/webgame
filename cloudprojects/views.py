@@ -24,6 +24,8 @@ def start_game(request):
 	new_user.name = "Player %s%s%s" %(random.choice(rand_char),random.choice(rand_char),random.choice(rand_char))
 	new_user.password = "0"
 	new_user.roi = 0.0
+	new_user.hands = 0
+	new_user.num_games = 0
 	new_user.save()
 	new_id = Player()
 	new_id.turns = 0
@@ -111,7 +113,10 @@ def play(request, n, bet, turn):
 			output = "%s LOST after %s hands" %(name, state[1])
 		else:
 			output = "After 100 hands %s averaged %s big blinds" %(name, state[0])
-		os.remove(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id))
+		try:
+			os.remove(os.path.join(os.path.dirname(__file__), "game_%s.p" %player.id))
+		except:
+			pass
 		context = {"msg":output, "user":player.user}
 		return render(request, "end_game.html", context)
 
@@ -180,7 +185,10 @@ def play(request, n, bet, turn):
 		player.stack = int(GAME.p1_stack)
 		player.save()
 		U = player.user
-		U.roi = U.update_roi()
+		updates = U.update()
+		U.num_games = updates[0]
+		U.hands = updates[1]
+		U.roi = updates[2]
 		U.save()
 		context = {"hand":hand, "board":board, "cpu_hand":cpu_hand, "winner":winner, "pot":state[2], "to_call":state[3], "hand_num":state[-2], "stack": state[4], "ai_stack":state[6], "messages":messages, "fold":fold, "call":call, "raise":raises,  "alias":player, "next":next_turn, "call_button":call_button, "new_hand":new_hand, "f_button":fold_attr, "user":player.user}
 		return render(request, "poker_results.html", context)
@@ -236,6 +244,8 @@ def login_new_user(request):
 		new_user.name = name
 		new_user.password = code
 		new_user.roi = 0.0
+		new_user.hands = 0
+		new_user.num_games = 0
 		new_user.save()
 		context = {"user":new_user}
 		return render(request, "login_success.html",context)
@@ -255,7 +265,13 @@ def login_user(request):
 		context = {"msg":msg}
 		return render(request, "login.html", context)
 	if code==user[0].password:
-		context = {"user":user[0]}
+		user = user[0]
+		x = user.update()
+		user.num_games = x[0]
+		user.hands = x[1]
+		user.roi = x[2]
+		user.save()
+		context = {"user":user}
 		return render(request, "login_success.html", context)
 	else:
 		msg = "Password does not match!"
@@ -272,23 +288,22 @@ def stats(request, user_id):
 	rois = 0
 	users = 0
 	for u in User.objects.all():
-		x = u.hands_and_games()
-		if x[1] > 0 and x[2] > 0:
+		if u.hands > 0 and u.num_games>0:
 			rois += u.roi
 			users += 1
-			total_hands += x[1]
-			total_games += x[0]
-			if x[0] > 20 or x[1] > 200:
+			total_hands += u.hands
+			total_games += u.num_games
+			if u.num_games > 100 or u.hands > 2500:
 				if u.roi > 0:
 					above_200.append((u.name, u.roi, "green"))
 				else:
 					above_200.append((u.name, u.roi, "red"))
-			if x[0] > 100 or x[1] > 1000:
+			elif u.num_games > 50 or u.hands > 1000:
 				if u.roi > 0:
 					above_200.append((u.name, u.roi, "green"))
 				else:
 					above_200.append((u.name, u.roi, "red"))
-			if x[0] > 200 or x[1] > 2500:
+			elif u.num_games > 20 or u.hands > 200:
 				if u.roi > 0:
 					above_200.append((u.name, u.roi, "green"))
 				else:
@@ -304,12 +319,6 @@ def stats(request, user_id):
 	gold = sorted(above_2500, key=itemgetter(1), reverse=True)
 	silver = sorted(above_1000, key=itemgetter(1), reverse=True)
 	bronze = sorted(above_200, key=itemgetter(1), reverse=True)
-	if len(gold) >= 10:
-		gold = gold[0:10]
-	if len(silver) >= 10:
-		silver = silver[0:10]
-	if len(bronze) >= 10:
-		bronze = bronze[0:10]
 	level = "NOVICE"
 	user_index = "None"
 	if (this_user.name, this_user.roi) in bronze:
@@ -327,8 +336,14 @@ def stats(request, user_id):
 	else:
 		u_color = "red"
 		opposite = "green"
+	if len(gold) >= 10:
+		gold = gold[0:10]
+	if len(silver) >= 10:
+		silver = silver[0:10]
+	if len(bronze) >= 10:
+		bronze = bronze[0:10]
 	opposite_roi = -1*this_user.roi
-	context = {"level":level, "user_index":user_index, "gold":gold, "silver":silver, "bronze":bronze, "K_ROI":Kassandra_ROI, "user":this_user, "opp_color":opposite, "opp_roi":opposite_roi, "games_hands":this_user.hands_and_games(), "total_hands":total_hands, "total_games":total_games, "u_color":u_color, "k_color":k_color}
+	context = {"level":level, "user_index":user_index, "gold":gold, "silver":silver, "bronze":bronze, "K_ROI":Kassandra_ROI, "user":this_user, "opp_color":opposite, "opp_roi":opposite_roi, "games_hands":(this_user.num_games, this_user.hands), "total_hands":total_hands, "total_games":total_games, "u_color":u_color, "k_color":k_color}
 	return render(request, "stats.html", context)
 		
 
