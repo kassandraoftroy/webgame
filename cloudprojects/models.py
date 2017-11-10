@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 class User(models.Model):
 	name=models.CharField(max_length=200)
 	password=models.CharField(max_length=200)
 	roi=models.DecimalField(max_digits=10, decimal_places=3, default="")
-	
 	def update_roi(self):
 		my_games = [p for p in Player.objects.all() if p.user.name==self.name and p.hands != 0]
 		if len(my_games) > 0:
