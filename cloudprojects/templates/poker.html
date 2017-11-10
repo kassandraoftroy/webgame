@@ -54,17 +54,17 @@ $(document).ready(function() {
 		</td>
 		<td>
 			<p style='text-align:center'>
-				<span style='font-size:28px'><strong>TO CALL:&nbsp;&nbsp;<span style='color:red;text-decoration:underline;'>{{to_call}}</strong></span></span><br>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id call next %}"><button style='width:100px'>{{call_button}}</button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id fold next %}"><button style='width:100px'><span style='color:{{f_button}}'>fold</span></button></a></div>
+				<div style='display:none' id='LinkId'><span style='font-size:28px'><strong>TO CALL:&nbsp;&nbsp;<span style='color:red;text-decoration:underline;'>{{to_call}}</span></strong></span><br>
+				<a href="{% url 'play' alias.id call next %}"><button style='width:100px'>{{call_button}}</button></a>
+				<a href="{% url 'play' alias.id fold next %}"><button style='width:100px'><span style='color:{{f_button}}'>fold</span></button></a>
 				<br>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.0 next %}"><button>raise 20</button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.1 next %}"><button>raise 30</button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.2 next %}"><button>raise 40</button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.3 next %}"><button><span style='color:{{r_button}}'>raise x2</span></button></a></div><br>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.4 next %}"><button><span style='color:{{p_button}}'>raise 1/2 pot</span></button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.5 next %}"><button>raise POT</button></a></div>
-				<div style='display:none' id='LinkId'><a href="{% url 'play' alias.id raise.6 next %}"><button>ALL IN</button></a></div>
+				<a href="{% url 'play' alias.id raise.0 next %}"><button>raise 20</button></a>
+				<a href="{% url 'play' alias.id raise.1 next %}"><button>raise 30</button></a>
+				<a href="{% url 'play' alias.id raise.2 next %}"><button>raise 40</button></a>
+				<a href="{% url 'play' alias.id raise.3 next %}"><button><span style='color:{{r_button}}'>raise x2</span></button></a><br>
+				<a href="{% url 'play' alias.id raise.4 next %}"><button><span style='color:{{p_button}}'>raise 1/2 pot</span></button></a>
+				<a href="{% url 'play' alias.id raise.5 next %}"><button>raise POT</button></a>
+				<a href="{% url 'play' alias.id raise.6 next %}"><button>ALL IN</button></a></div>
 			</p>
 		</td>	
 	</tr>
