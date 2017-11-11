@@ -41,8 +41,18 @@ def AI(hand, board, stack, opp_stack, BB, to_call, pot, dealer, bets, VARIABLES)
 			return int(0)
 	
 	if len(board)==4:
-		board_rankings = generate_turn_rankings(board)
-		board_rankings = [i[0] for i in board_rankings]
+		name = "".join(sorted([Card.int_to_str(c) for c in board], key=str.lower))
+		KEY = "turn_charts/%s.p" %name
+		try:
+			print "downloading file"
+			s3.Bucket("chartsflopturn").download_file(KEY, os.path.join(os.path.dirname(__file__), 'currentflop.p'))
+			print "found and downloaded file"
+			with open(os.path.join(os.path.dirname(__file__), 'currentflop.p'), "rb") as f:
+				board_rankings = pickle.load(f)
+				board_rankings = [i[0] for i in board_rankings]
+		except:
+			print "pickle loading error!"
+			return int(0)	
 	
 	if len(board)==5:
 		board_rankings = generate_river_rankings(board)
@@ -285,17 +295,6 @@ def preflop_decision(hand, board, stack, opp_stack, BB, to_call, pot, dealer, be
 						else:
 							return int(0)
 	return int(0)
-
-def generate_turn_rankings(board):
-	ranked_hands = []
-	possibles = [i for i in all_holes if len(i&set(board))==0]
-	for h in possibles:
-		new_hand = list(h)
-		cards_left = [[i] for i in Deck().draw(52) if i not in (list(board)+list(new_hand))]
-		avg_rank = sum([evaluator._seven(new_hand+board+i) for i in cards_left])/len(cards_left)
-		ranked_hands.append((h, avg_rank))
-	out = sorted(ranked_hands, key=itemgetter(1))
-	return out
 
 def generate_river_rankings(board):
 	ranked_hands = []
