@@ -175,6 +175,16 @@ def preflop_decision(hand, board, stack, opp_stack, BB, to_call, pot, dealer, be
 		elif stack < 12 * BB:
 			return stack
 
+	if opp_stack < 20*BB and stack > 75*BB and pot < 15*BB:
+		if rank < 6:
+			return stack
+		if dealer == True and random.random()>.9 and to_call < BB:
+			return stack
+		if to_call < BB and random.random()>.25:
+			return BB*4
+		if rank < 7:
+			return to_call
+
 	if dealer == True:
 		if to_call <= BB/2.0:
 			if 5 < rank < 8:
