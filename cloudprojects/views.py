@@ -95,6 +95,8 @@ def play(request, n, bet, turn):
 			new_number = GAME.p1_stack
 			state, variables = GAME.update_game(new_number)
 		elif int(bet) == 100:
+			if GAME.p1_stack + GAME.p2_stack != 2000:
+				return HttpResponse("Error Occured! Game Aborted.")
 			state, variables = GAME.update_game(None)
 	else:
 		if GAME.dealer == 1:

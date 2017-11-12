@@ -42,10 +42,9 @@ class Game:
 	def update_game(self, new_input_value):
 		print "got here"
 		if new_input_value == None:
-			self.pot = 0
 			if self.p1_stack > 0 and self.p2_stack > 0 and self.hand_number<self.max_hands:
 				if self.p1_stack + self.p2_stack != 2000:
-					return 0
+					return "E"
 				return self.new_hand()
 			else:
 				return self.end()

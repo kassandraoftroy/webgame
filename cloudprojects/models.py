@@ -19,7 +19,7 @@ class User(models.Model):
 			for i in my_games:
 				stack_agg += i.stack
 				total_hands += i.hands
-			avg_roi = stack_agg/len(my_games) - 1000
+			avg_roi = min(stack_agg/len(my_games) - 1000, 1000)
 			return (len(my_games), total_hands, avg_roi)
 		else:
 			return (0,0,0)
